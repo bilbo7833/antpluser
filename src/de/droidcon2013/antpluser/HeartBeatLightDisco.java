@@ -17,7 +17,7 @@ import com.dsi.ant.plugins.antplus.pcc.AntPlusHeartRatePcc;
 import com.dsi.ant.plugins.antplus.pcc.AntPlusHeartRatePcc.IHeartRateDataReceiver;
 import com.dsi.ant.plugins.antplus.pcc.AntPlusHeartRatePcc.IHeartRateDataTimestampReceiver;
 
-public class MainActivity extends Activity {
+public class HeartBeatLightDisco extends Activity {
 
     final String TAG = "Pulse";
 
@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
             hrPcc = null;
         }
 
-        counter = new MyCounter(Integer.MAX_VALUE, 500).start();
+
 
 
         AntPlusHeartRatePcc.requestAccess(this, this, false,
@@ -94,16 +94,16 @@ public class MainActivity extends Activity {
                                     @Override
                                     public void run() {
                                         // tv_msgsRcvdCount.setText(String.valueOf(currentMessageCount));
-                                        MainActivity.this.computedHeartRate = computedHeartRate;
-                                        tvBpm.setText(String
+                                        HeartBeatLightDisco.this.computedHeartRate = computedHeartRate;
+                                        tvBpm.setText( "Pulse: " + String
                                                 .valueOf(computedHeartRate));
                                         // tv_heartBeatCounter.setText(String.valueOf(heartBeatCounter));
                                         /*
-                                         * if (MainActivity.this.firstRun) {
-                                         * MainActivity.this.timer.schedule(
+                                         * if (HeartBeatLightDisco.this.firstRun) {
+                                         * HeartBeatLightDisco.this.timer.schedule(
                                          * changeColorTask,
-                                         * MainActivity.this.getHeartRate() );
-                                         * MainActivity.this.firstRun = false; }
+                                         * HeartBeatLightDisco.this.getHeartRate() );
+                                         * HeartBeatLightDisco.this.firstRun = false; }
                                          */
                                     }
                                 });
@@ -119,19 +119,19 @@ public class MainActivity extends Activity {
                                     @Override
                                     public void run() {
                                         if (!timestampOfLastEvent
-                                                .equals(MainActivity.this.lastEvent)) {
-                                            MainActivity.this.stillRunning = true;
+                                                .equals(HeartBeatLightDisco.this.lastEvent)) {
+                                            HeartBeatLightDisco.this.stillRunning = true;
                                             if (computedHeartRate > 0 && firstRun ) {
                                                 Log.d( TAG, "Starting counter" );
-//                                                counter = new MyCounter(Integer.MAX_VALUE, getHeartRate()).start();
+                                                counter = new MyCounter(Integer.MAX_VALUE, getHeartRate()).start();
                                                 firstRun = false;
                                             }
                                         } else {
-                                            MainActivity.this.stillRunning = false;
+                                            HeartBeatLightDisco.this.stillRunning = false;
                                         }
 
-                                        MainActivity.this.lastEvent = timestampOfLastEvent;
-                                        tvLastTime.setText(String
+                                        HeartBeatLightDisco.this.lastEvent = timestampOfLastEvent;
+                                        tvLastTime.setText("Last TimeStamp: " + String
                                                 .valueOf(timestampOfLastEvent));
 
                                         // tv_timestampOfLastEvent.setText(String.valueOf(timestampOfLastEvent));
@@ -173,7 +173,7 @@ public class MainActivity extends Activity {
         public void onTick(long arg0) {
             i++;
             Log.d( TAG, "Changing color" );
-            background.setBackgroundColor(132 * i + 50);
+            background.setBackgroundColor(255001110 * i);
             background.invalidate();
 //            background.setBackgroundColor(getNextColor());
         }
@@ -186,14 +186,14 @@ public class MainActivity extends Activity {
     /*
      * public TimerTask changeColorTask = new TimerTask() {
      *
-     * @Override public void run() { MainActivity.this.runOnUiThread( new
+     * @Override public void run() { HeartBeatLightDisco.this.runOnUiThread( new
      * Runnable() {
      *
      * @Override public void run() {
-     * MainActivity.this.background.setBackgroundColor(
-     * MainActivity.this.getNextColor() ); // TimerTask.this.cancel();
-     * MainActivity.this.timer.purge(); MainActivity.this.timer.schedule(
-     * changeColorTask, MainActivity.this.getHeartRate() ); } } ); }
+     * HeartBeatLightDisco.this.background.setBackgroundColor(
+     * HeartBeatLightDisco.this.getNextColor() ); // TimerTask.this.cancel();
+     * HeartBeatLightDisco.this.timer.purge(); HeartBeatLightDisco.this.timer.schedule(
+     * changeColorTask, HeartBeatLightDisco.this.getHeartRate() ); } } ); }
      *
      * };
      */
@@ -211,12 +211,12 @@ public class MainActivity extends Activity {
 //
 //        @Override
 //        public void run() {
-//            MainActivity.this.runOnUiThread( new Runnable() {
+//            HeartBeatLightDisco.this.runOnUiThread( new Runnable() {
 //
 //                @Override
 //                public void run() {
-//                    MainActivity.this.background.setBackgroundResource( MainActivity.this.getNextColor() );
-//                    MainActivity.this.scheduleTask();
+//                    HeartBeatLightDisco.this.background.setBackgroundResource( HeartBeatLightDisco.this.getNextColor() );
+//                    HeartBeatLightDisco.this.scheduleTask();
 //                }
 //            });
 //        }
@@ -224,9 +224,9 @@ public class MainActivity extends Activity {
 
 
 //    private void scheduleTask() {
-//        MainActivity.this.timer = new Timer();
+//        HeartBeatLightDisco.this.timer = new Timer();
 //        ChangeColorTask newTask = new ChangeColorTask( this );
-//        MainActivity.this.timer.schedule( newTask, MainActivity.this.getHeartRate() );
+//        HeartBeatLightDisco.this.timer.schedule( newTask, HeartBeatLightDisco.this.getHeartRate() );
 //    }
 
     private int getNextColor() {
