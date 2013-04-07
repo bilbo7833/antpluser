@@ -30,8 +30,8 @@ public class MainActivity extends Activity
     int computedHeartRate = -1;
     BigDecimal lastEvent;
     boolean stillRunning = false;
-    boolean taskRunning = false;
 
+    boolean firstRun = true;
 
 
 
@@ -116,20 +116,15 @@ public class MainActivity extends Activity
                                             @Override
                                             public void run()
                                             {
-
-                                                if ( MainActivity.this.computedHeartRate > 0 &&
-                                                        computedHeartRate != MainActivity.this.computedHeartRate ) {
-                                                    if ( MainActivity.this.taskRunning ) {
-                                                        MainActivity.this.changeColorTask.cancel();
-                                                    }
-                                                    MainActivity.this.timer.schedule( changeColorTask, 0, MainActivity.this.getHeartRate() );
-                                                    MainActivity.this.taskRunning = true;
-                                                }
-
                                                 //tv_msgsRcvdCount.setText(String.valueOf(currentMessageCount));
                                                 MainActivity.this.computedHeartRate = computedHeartRate;
                                                 tvBpm.setText(String.valueOf(computedHeartRate));
                                                 //tv_heartBeatCounter.setText(String.valueOf(heartBeatCounter));
+
+                                                if (MainActivity.this.firstRun) {
+                                                        MainActivity.this.timer.schedule( changeColorTask, MainActivity.this.getHeartRate() );
+                                                        MainActivity.this.firstRun = false;
+                                                    }
                                             }
                                         });
                             }
@@ -229,6 +224,8 @@ public class MainActivity extends Activity
                 }
             );
 
+
+
     }
 
     protected long getHeartRate() {
@@ -244,6 +241,9 @@ public class MainActivity extends Activity
                 @Override
                 public void run() {
                     MainActivity.this.background.setBackgroundColor( MainActivity.this.getNextColor() );
+                    TimerTask.this.cancel();
+                    MainActivity.this.timer.purge();
+                    MainActivity.this.timer.schedule( changeColorTask, MainActivity.this.getHeartRate() );
                 }
             } );
         }
