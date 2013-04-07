@@ -1,6 +1,8 @@
 package de.droidcon2013.antpluser;
 
 import java.math.BigDecimal;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -23,9 +25,12 @@ public class MainActivity extends Activity
     TextView tvLastTime;
     RelativeLayout background;
 
-    int computedHeartRate;
+    Timer timer = new Timer();
+
+    int computedHeartRate = -1;
     BigDecimal lastEvent;
     boolean stillRunning = false;
+    boolean taskRunning = false;
 
 
 
@@ -111,6 +116,16 @@ public class MainActivity extends Activity
                                             @Override
                                             public void run()
                                             {
+
+                                                if ( MainActivity.this.computedHeartRate > 0 &&
+                                                        computedHeartRate != MainActivity.this.computedHeartRate ) {
+                                                    if ( MainActivity.this.taskRunning ) {
+                                                        MainActivity.this.changeColorTask.cancel();
+                                                    }
+                                                    MainActivity.this.timer.schedule( changeColorTask, 0, MainActivity.this.getHeartRate() );
+                                                    MainActivity.this.taskRunning = true;
+                                                }
+
                                                 //tv_msgsRcvdCount.setText(String.valueOf(currentMessageCount));
                                                 MainActivity.this.computedHeartRate = computedHeartRate;
                                                 tvBpm.setText(String.valueOf(computedHeartRate));
@@ -137,6 +152,8 @@ public class MainActivity extends Activity
                                                 }
                                                 MainActivity.this.lastEvent = timestampOfLastEvent;
                                                 tvLastTime.setText(String.valueOf(timestampOfLastEvent));
+
+
 
 //                                                tv_timestampOfLastEvent.setText(String.valueOf(timestampOfLastEvent));
                                             }
@@ -214,9 +231,24 @@ public class MainActivity extends Activity
 
     }
 
+    protected long getHeartRate() {
+        return 60000 / this.computedHeartRate;
+    }
+
     public TimerTask changeColorTask = new TimerTask() {
 
-    }
+        @Override
+        public void run() {
+            MainActivity.this.runOnUiThread( new Runnable() {
+
+                @Override
+                public void run() {
+                    MainActivity.this.background.setBackgroundColor( MainActivity.this.getNextColor() );
+                }
+            } );
+        }
+
+    };
 
     private int getNextColor() {
         if (lastColorRed) {
